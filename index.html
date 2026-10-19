@@ -21,39 +21,16 @@
         const statusDisp = document.getElementById('status');
         const resultDiv = document.getElementById('result');
 
-        // GASのウェブアプリURL
-        const GAS_URL = 'https://script.google.com/a/macros/mbs.co.jp/s/AKfycbz_9sGfz7LL5AYAJJNCPrQsumZfHhmwTqrP2HqeU8AquiQ-2lsGZuQTbpYYH_V6GkRG/exec';
+        // GASのウェブアプリURLをここに貼り付け
+        const GAS_URL = 'https://script.google.com/a/macros/mbs.co.jp/s/AKfycbwGUpvvvbJgPXwRk5hfiu70PBjhFvCscNhoX-I-oszP7tq5P5xL489E6Wn7_77IzkNb/exec';
 
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'ja-JP';
         recognition.interimResults = false; // 確定時のみ送信
         recognition.continuous = true;    // 連続認識
 
-        // ★【追加】録音開始ボタンを押したときの処理
-        startBtn.addEventListener('click', () => {
-            try {
-                recognition.start();
-            } catch(e) {
-                // すでに起動している場合のエラーを回避
-                console.log("すでに起動しています", e);
-            }
-        });
-
-        // ★【追加】停止ボタンを押したときの処理
-        stopBtn.addEventListener('click', () => {
-            recognition.stop();
-            statusDisp.innerText = "停止中";
-        });
-
         recognition.onstart = () => {
             statusDisp.innerText = "認識中...";
-        };
-
-        // ★【追加】予期せず録音が切れたときに自動で「待機中」に戻す処理
-        recognition.onend = () => {
-            if (statusDisp.innerText === "認識中...") {
-                statusDisp.innerText = "待機中（終了しました）";
-            }
         };
 
         recognition.onresult = (event) => {
@@ -73,22 +50,22 @@
         };
 
         function sendToGas(text) {
-            fetch(GAS_URL, {
-                method: 'POST',
-                mode: 'no-cors', // これが重要
-                cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ text: text })
-            })
-            .then(() => {
-                console.log("送信処理を実行しました");
-            })
-            .catch(err => {
-                console.error("送信中にエラーが発生:", err);
-            });
-        }
+    fetch(GAS_URL, {
+        method: 'POST',
+        mode: 'no-cors', // これが重要
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text: text })
+    })
+    .then(() => {
+        console.log("送信処理を実行しました");
+    })
+    .catch(err => {
+        console.error("送信中にエラーが発生:", err);
+    });
+}
     </script>
 </body>
 </html>
